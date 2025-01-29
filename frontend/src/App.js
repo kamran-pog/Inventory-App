@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:3000/groceries";
+const API_URL = "https://render-wq7v.onrender.com/groceries";
 
 function App() {
   const [groceries, setGroceries] = useState([]);
