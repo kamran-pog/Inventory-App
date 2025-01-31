@@ -1,6 +1,12 @@
 const express = require('express');
-const db = require('./db');
 const cors = require("cors");
+const {
+  getAllGroceries,
+  getGroceryById,
+  deleteGroceryById,
+  addGrocery,
+  updateGrocery,
+} = require('./config/model');
 
 const app = express();
 
@@ -14,7 +20,7 @@ app.get('/', (req, res) => {
 
 app.get('/groceries', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM groceries'); // Query to fetch all users
+    const result = await getAllGroceries(); // Query to fetch all users
     res.json(result.rows); // Send data as JSON
   } catch (err) {
     console.error(err.message);
@@ -23,11 +29,8 @@ app.get('/groceries', async (req, res) => {
 });
 
 app.get('/groceries/:id', async (req, res) => {
-    const {id} = req.params;
-
     try {
-        const query = 'SELECT * FROM groceries WHERE id = $1';
-        const result = await db.query(query, [id]);
+        const result = await getGroceryById(req.params.id);
 
         if (result.rows.length === 0) {
             return res.status(404).send('Grocery not found');
@@ -44,8 +47,7 @@ app.delete('/groceries/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const query = 'DELETE FROM groceries WHERE id = $1 RETURNING *';
-    const result = await db.query(query, [id]);
+    const result = await deleteGroceryById(req.params.id);
 
     if (result.rows.length === 0) {
       return res.status(404).send('Grocery not found');
@@ -59,16 +61,10 @@ app.delete('/groceries/:id', async (req, res) => {
 });
 
 app.post('/groceries', async (req, res) => {
-  const { name, price_per_pound, units_available } = req.body;
-
   try {
-    const query = `
-      INSERT INTO groceries (name, price_per_pound, units_available)
-      VALUES ($1, $2, $3)
-      RETURNING *`;
-    const values = [name, price_per_pound, units_available];
+    const { name, price_per_pound, units_available } = req.body;
 
-    const result = await db.query(query, values);
+    const result = await addGrocery(name, price_per_pound, units_available);
 
     res.status(201).json(result.rows[0]); // Return the newly added grocery item
   } catch (err) {
@@ -78,21 +74,10 @@ app.post('/groceries', async (req, res) => {
 });
 
 app.patch('/groceries/:id', async (req, res) => {
-  const { id } = req.params;
   const { name, price_per_pound, units_available } = req.body;
 
   try {
-    const query = `
-      UPDATE groceries 
-      SET 
-        name = COALESCE($1, name), 
-        price_per_pound = COALESCE($2, price_per_pound), 
-        units_available = COALESCE($3, units_available) 
-      WHERE id = $4 
-      RETURNING *`;
-    const values = [name, price_per_pound, units_available, id];
-
-    const result = await db.query(query, values);
+    const result = await updateGrocery(req.params.id, name, price_per_pound, units_available);
 
     if (result.rows.length === 0) {
       return res.status(404).send('Grocery not found');
