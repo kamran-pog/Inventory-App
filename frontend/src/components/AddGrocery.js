@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:3001/groceries";
+const API_URL = "https://render-wq7v.onrender.com/groceries";
 
 function AddGrocery({ addGrocery }) {
   const [newGrocery, setNewGrocery] = useState({ name: "", price_per_pound: "", units_available: "" });

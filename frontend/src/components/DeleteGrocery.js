@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3001/groceries";
+const API_URL = "https://render-wq7v.onrender.com/groceries";
 
 function DeleteGrocery({ id, onDelete }) {
   const handleDelete = () => {

@@ -3,9 +3,7 @@ import React, { useEffect, useState } from "react";
 import AddGrocery from "./components/AddGrocery";
 import GroceryList from "./components/GroceryList";
 
-const API_URL = "http://localhost:3001/groceries";
-
-// https://render-wq7v.onrender.com/groceries
+const API_URL = "https://render-wq7v.onrender.com/groceries";
 
 function App() {
   const [groceries, setGroceries] = useState([]);
