@@ -6,7 +6,7 @@ const {
   deleteGroceryById,
   addGrocery,
   updateGrocery,
-} = require('./config/model');
+} = require('./model');
 
 const app = express();
 
