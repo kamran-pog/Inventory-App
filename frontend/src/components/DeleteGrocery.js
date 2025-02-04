@@ -1,4 +1,4 @@
-import { API_URL } from "../config/config.js"; 
+import { API_URL } from "../API_URL/API_URL.js"; 
 import axios from "axios";
 
 function DeleteGrocery({ id, onDelete }) {
