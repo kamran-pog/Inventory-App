@@ -1,26 +1,10 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import AddGrocery from "./components/AddGrocery";
 import GroceryList from "./components/GroceryList";
-
-const API_URL = "https://render-wq7v.onrender.com/groceries";
+import useGroceries from "./components/UseGroceries";
 
 function App() {
-  const [groceries, setGroceries] = useState([]);
-
-  useEffect(() => {
-    axios.get(API_URL)
-      .then(response => setGroceries(response.data))
-      .catch(error => console.error("Error fetching data:", error));
-  }, []);
-
-  const removeGrocery = (id) => {
-    setGroceries(groceries.filter(item => item.id !== id));
-  };
-
-  const addGrocery = (newGrocery) => {
-    setGroceries(prevGroceries => [...prevGroceries, newGrocery])
-  };
+  const [groceries, addGrocery, removeGrocery] = useGroceries([]);
 
 return (
     <div style={{ textAlign: "center", padding: "20px" }}>
