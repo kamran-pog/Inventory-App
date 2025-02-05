@@ -1,7 +1,7 @@
 import DeleteGrocery from "./DeleteGrocery";
 import UpdateGrocery from "./UpdateGrocery";
 
-function GroceryList({ groceries, onDelete }) {
+function GroceryList({ groceries, onDelete, onUpdate }) {
   return (
     groceries.length === 0 ? (
       <p>Loading...</p>
