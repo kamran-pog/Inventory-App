@@ -19,7 +19,13 @@ function useGroceries() {
     setGroceries(prevGroceries => [...prevGroceries, newGrocery]);
   };
 
-  return { groceries, addGrocery, removeGrocery };
+  const updateGrocery = (updatedItem) => {
+    setGroceries(prevGroceries => 
+      prevGroceries.map(item => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+
+  return { groceries, addGrocery, removeGrocery, updateGrocery };
 }
 
 export default useGroceries;

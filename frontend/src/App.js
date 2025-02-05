@@ -2,6 +2,7 @@ import React from "react";
 import AddGrocery from "./components/AddGrocery";
 import GroceryList from "./components/GroceryList";
 import useGroceries from "./components/UseGroceries";
+import updateGrocery from "./components/UpdateGrocery";
 
 function App() {
   const {groceries, addGrocery, removeGrocery} = useGroceries([]);
@@ -12,7 +13,7 @@ return (
 
       <AddGrocery addGrocery={addGrocery} />
 
-      <GroceryList groceries={groceries} onDelete={removeGrocery} />
+      <GroceryList groceries={groceries} onDelete={removeGrocery} onUpdate={updateGrocery} />
     </div>
   );
 }
