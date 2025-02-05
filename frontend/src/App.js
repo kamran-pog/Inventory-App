@@ -5,7 +5,7 @@ import useGroceries from "./components/UseGroceries";
 import updateGrocery from "./components/UpdateGrocery";
 
 function App() {
-  const {groceries, addGrocery, removeGrocery} = useGroceries([]);
+  const {groceries, addGrocery, removeGrocery, updateGrocery} = useGroceries([]);
 
 return (
     <div style={{ textAlign: "center", padding: "20px" }}>

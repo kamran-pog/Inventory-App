@@ -7,8 +7,19 @@ function useGroceries() {
 
   useEffect(() => {
     axios.get(API_URL)
-      .then(response => setGroceries(response.data))
-      .catch(error => console.error("Error fetching data:", error));
+      .then(response => {
+        console.log("API Response:", response.data); // Debugging
+        if (Array.isArray(response.data)) {
+          setGroceries(response.data);
+        } else {
+          console.error("API did not return an array:", response.data);
+          setGroceries([]); // Prevent .map() errors
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+        setGroceries([]); // Ensure groceries is always an array
+      });
   }, []);
 
   const removeGrocery = (id) => {

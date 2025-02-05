@@ -1,11 +1,13 @@
 import DeleteGrocery from "./DeleteGrocery";
 import UpdateGrocery from "./UpdateGrocery";
 
-function GroceryList({ groceries, onDelete, onUpdate }) {
+function GroceryList({ groceries = [], onDelete, onUpdate }) {
+
+  if (groceries.length === 0) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    groceries.length === 0 ? (
-      <p>Loading...</p>
-    ) : (
       <ul style={{ listStyle: "none", padding: 0 }}>
         {groceries.map((item) => (
           <li key={item.id} style={{ padding: "10px", borderBottom: "1px solid #ccc" }}>
@@ -24,8 +26,7 @@ function GroceryList({ groceries, onDelete, onUpdate }) {
           </li>
         ))}
       </ul>
-    )
-  );
+    );
 }
 
 export default GroceryList;
