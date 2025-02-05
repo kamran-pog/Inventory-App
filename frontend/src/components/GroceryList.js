@@ -1,4 +1,5 @@
 import DeleteGrocery from "./DeleteGrocery";
+import UpdateGrocery from "./UpdateGrocery";
 
 function GroceryList({ groceries, onDelete }) {
   return (
@@ -13,6 +14,13 @@ function GroceryList({ groceries, onDelete }) {
             Available: {item.units_available} units
             <br />
             <DeleteGrocery id={item.id} onDelete={onDelete} />
+            <UpdateGrocery
+              id={item.id}
+              currentName={item.name}
+              currentPrice={item.price_per_pound}
+              currentUnits={item.units_available}
+              onUpdate={onUpdate}
+            />
           </li>
         ))}
       </ul>
