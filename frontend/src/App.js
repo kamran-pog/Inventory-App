@@ -2,7 +2,6 @@ import React from "react";
 import AddGrocery from "./components/AddGrocery";
 import GroceryList from "./components/GroceryList";
 import useGroceries from "./components/UseGroceries";
-import updateGrocery from "./components/UpdateGrocery";
 
 function App() {
   const {groceries, addGrocery, removeGrocery, updateGrocery} = useGroceries([]);

@@ -5,7 +5,7 @@ const {
   deleteGroceryById,
   addGrocery,
   updateGrocery,
-} = require("../model");
+} = require("../models/GroceryModel");
 
 const router = express.Router();
 

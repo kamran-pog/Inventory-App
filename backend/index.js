@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require("cors");
-const groceryRoutes = require("./routes/groceries");
+const groceryRoutes = require("./Grocery_routes/groceries.js");
+const userRoutes = require("./User_routes/Users.js");
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.get('/', (req, res) => {
 });
 
 app.use("/groceries", groceryRoutes);
+
+app.use("/users", userRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
