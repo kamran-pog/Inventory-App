@@ -1,4 +1,7 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+require("dotenv").config();
 const {
     getAllUsers,
     getUserById,
@@ -7,9 +10,11 @@ const {
     updateUserById
 } = require("../models/UserModel");
 
+const authenticateToken = require("../middleware/authentication");
+
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
     try {
       const result = await getAllUsers();
       res.json(result.rows);
@@ -18,7 +23,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateToken, async (req, res) => {
     try {
       const result = await getUserById(req.params.id);
       res.json(result.rows[0] || { error: "User not found" });
@@ -27,17 +32,21 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/signup", async (req, res) => {
     const { name, email, password } = req.body;
     try {
-      const result = await addUser(name, email, password);
-      res.status(201).json(result.rows[0]);
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const result = await addUser(name, email, hashedPassword);
+      const user = result.rows[0];
+
+      const token = jwt.sign({ id: user.id, email: user.email }, process.env.SECRET_KEY, { expiresIn: "1h" });
+      res.status(201).json({ user, token });
     } catch (err) {
       res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateToken, async (req, res) => {
     try {
       const result = await deleteUserById(req.params.id);
       if (result.rowCount === 0) {
@@ -45,12 +54,11 @@ router.delete("/:id", async (req, res) => {
       }
       res.json({ message: "User deleted successfully", deletedUser: result.rows[0] });
     } catch (err) {
-      console.error(err);
       res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticateToken, async (req, res) => {
   const { name, email, password } = req.body;
   try {
     const result = await updateUserById(req.params.id, name, email, password);

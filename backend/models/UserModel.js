@@ -34,4 +34,4 @@ module.exports = {
     addUser,
     deleteUserById,
     updateUserById
-  };
+};
