@@ -7,14 +7,15 @@ const {
     getUserById,
     addUser,
     deleteUserById,
-    updateUserById
+    updateUserById,
+    getUserByEmail
 } = require("../models/UserModel");
 
 const authenticateToken = require("../middleware/authentication");
 
 const router = express.Router();
 
-router.get("/", authenticateToken, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
       const result = await getAllUsers();
       res.json(result.rows);
@@ -44,6 +45,34 @@ router.post("/signup", async (req, res) => {
     } catch (err) {
       res.status(500).json({ error: "Internal Server Error" });
     }
+});
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+
+      const result = await getUserByEmail(email);
+      if (result.rows.length === 0) {
+          return res.status(401).json({ error: "Invalid email or password" });
+      }
+
+      const user = result.rows[0];
+
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+          return res.status(401).json({ error: "Invalid email or password" });
+      }
+
+
+      const token = jwt.sign({ id: user.id, email: user.email }, process.env.SECRET_KEY, { expiresIn: "1h" });
+
+      res.json({ message: "Login successful", token });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 router.delete("/:id", authenticateToken, async (req, res) => {

@@ -28,10 +28,15 @@ const updateUserById = async (id, name, email, password) => {
   );
 };
 
+const getUserByEmail = async (email) => {
+  return db.query("SELECT * FROM users WHERE email = $1", [email]);
+};
+
 module.exports = {
     getAllUsers,
     getUserById,
     addUser,
     deleteUserById,
-    updateUserById
+    updateUserById,
+    getUserByEmail
 };
