@@ -13,6 +13,8 @@ const {
 
 const authenticateToken = require("../middleware/authentication");
 
+const authorizeRole = require("../middleware/roleAuth");
+
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -24,7 +26,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:id", authenticateToken, async (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
       const result = await getUserById(req.params.id);
       res.json(result.rows[0] || { error: "User not found" });
@@ -34,13 +36,17 @@ router.get("/:id", authenticateToken, async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = await addUser(name, email, hashedPassword);
       const user = result.rows[0];
 
-      const token = jwt.sign({ id: user.id, email: user.email }, process.env.SECRET_KEY, { expiresIn: "1h" });
+      const token = jwt.sign(
+        { id: user.id, email: user.email, role: user.role }, 
+        process.env.SECRET_KEY, 
+        { expiresIn: "1h" }
+      );
       res.status(201).json({ user, token });
     } catch (err) {
       res.status(500).json({ error: "Internal Server Error" });
@@ -59,14 +65,16 @@ router.post("/login", async (req, res) => {
 
       const user = result.rows[0];
 
-
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
           return res.status(401).json({ error: "Invalid email or password" });
       }
 
-
-      const token = jwt.sign({ id: user.id, email: user.email }, process.env.SECRET_KEY, { expiresIn: "1h" });
+      const token = jwt.sign(
+        { id: user.id, email: user.email, role: user.role }, 
+        process.env.SECRET_KEY, 
+        { expiresIn: "1h" }
+      );
 
       res.json({ message: "Login successful", token });
   } catch (err) {
@@ -75,7 +83,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.delete("/:id", authenticateToken, async (req, res) => {
+router.delete("/:id", authenticateToken, authorizeRole("admin"), async (req, res) => {
     try {
       const result = await deleteUserById(req.params.id);
       if (result.rowCount === 0) {

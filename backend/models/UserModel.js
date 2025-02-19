@@ -8,11 +8,11 @@ const getUserById = async (id) => {
     return db.query("SELECT * FROM users WHERE id = $1", [id]);
 };
   
-const addUser = async (name, email, password) => {
+const addUser = async (name, email, password, role) => {
     return db.query(
-      `INSERT INTO users (name, email, password) 
-       VALUES ($1, $2, $3) RETURNING *`,
-      [name, email, password]
+      `INSERT INTO users (name, email, password, role) 
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [name, email, password, role]
     );
 };
 
