@@ -10,11 +10,19 @@ function AddGrocery({ addGrocery }) {
       alert("Please fill in all fields");
       return;
     }
+    
+    const price = parseFloat(newGrocery.price_per_pound);
+    const units = parseInt(newGrocery.units_available);
+
+    if (isNaN(price) || isNaN(units)) {
+      alert("Please enter valid values for price per pound and units available");
+      return;
+    }
 
     axios.post(API_URL, {
       name: newGrocery.name,
-      price_per_pound: parseFloat(newGrocery.price_per_pound),
-      units_available: parseInt(newGrocery.units_available)
+      price_per_pound: price,
+      units_available: units
     })
     .then(response => {
       addGrocery(response.data);  // Call the parent function to update the list

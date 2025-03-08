@@ -3,7 +3,7 @@ exports.up = function(knex) {
         table.increments('id').primary();
         table.string('name').notNullable();
         table.integer('price_per_pound').notNullable();
-        table.integer('units_available').notNullable();
+        table.decimal('units_available').notNullable();
       });
 };
 
